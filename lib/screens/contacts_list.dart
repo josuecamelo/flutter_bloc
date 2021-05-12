@@ -1,9 +1,17 @@
+import 'package:bytebank/components/container.dart';
 import 'package:bytebank/components/progress.dart';
 import 'package:bytebank/database/dao/contact_dao.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/screens/contact_form.dart';
 import 'package:bytebank/screens/transaction_form.dart';
 import 'package:flutter/material.dart';
+
+class ContactsListContainer extends BlocContainer{
+  @override
+  Widget build(BuildContext context) {
+    return ContactsList();
+  }
+} 
 
 class ContactsList extends StatefulWidget {
   @override
@@ -54,19 +62,30 @@ class _ContactsListState extends State<ContactsList> {
           return Text('Unknown error');
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ContactForm(),
-            ),
-          ).then((value) => setState(() {}));
-        },
-        child: Icon(
-          Icons.add,
-        ),
+      floatingActionButton: buildAddContactButton(context),
+    );
+  }
+
+  FloatingActionButton buildAddContactButton(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ContactForm(),
+          ),
+        ).then((value) => update());
+      },
+      child: Icon(
+        Icons.add,
       ),
     );
+  }
+
+  //não há estado e não esta usando bloc-> será melhorado
+  update() {
+    setState(() {
+
+    });
   }
 }
 

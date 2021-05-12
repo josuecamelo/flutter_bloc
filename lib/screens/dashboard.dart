@@ -1,3 +1,4 @@
+import 'package:bytebank/components/container.dart';
 import 'package:bytebank/models/name.dart';
 import 'package:bytebank/screens/contacts_list.dart';
 import 'package:bytebank/screens/name.dart';
@@ -64,11 +65,12 @@ class DashboardView extends StatelessWidget {
   }
 
   void _showContactsList(BuildContext blocContext) {
-    Navigator.of(blocContext).push(
-      MaterialPageRoute(
-        builder: (context) => ContactsList(),
-      ),
-    );
+    // Navigator.of(blocContext).push(
+    //   MaterialPageRoute(
+    //     builder: (context) => ContactsList(),
+    //   ),
+    // );
+    push(blocContext, ContactsListContainer());
   }
 
   void _showChangeName(BuildContext blocContext) {
