@@ -1,5 +1,10 @@
+import 'package:bytebank/components/container.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Exemplo de contador utilizando Bloc
+// Em duas variações
 
 class CounterCubit extends Cubit<int> {
   CounterCubit() : super(0);
@@ -12,44 +17,41 @@ class CounterCubit extends Cubit<int> {
 class CounterContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (_) => CounterCubit(),
-        child: CounterView(),
-    );
+    return BlocProvider(create: (_) => CounterCubit(), child: CounterView());
   }
 }
 
-class CounterView extends StatelessWidget {
+class CounterView extends BlocContainer {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    // não temos como saber quando devemos redesenhar
+    // final state = context.bloc<CounterCubit>().state;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Contador'),
-      ),
+      appBar: AppBar(title: const Text("Counter")),
       body: Center(
-        child: BlocBuilder<CounterCubit, int>(builder: (context, state){
-          return Text(
-            '$state',
-            style: textTheme.headline2,
-          );
-        },)
+        // ruim não sabemos quando rebuildar
+        // child: Text("$state", style: textTheme.headline2),
+
+        // é notificado quando deve ser rebuildado
+        child: BlocBuilder<CounterCubit, int>(builder: (context, state) {
+          return Text("$state", style: textTheme.headline2);
+        }),
       ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: () => context.read<CounterCubit>().increment(),
-            child: Icon(Icons.add),
+            child: const Icon(Icons.add),
+            // abordagem 1 de como acessar o bloc
+            onPressed: () => context.bloc<CounterCubit>().increment(),
           ),
-          SizedBox(
-            height: 8.0,
-          ),
+          const SizedBox(height: 8),
           FloatingActionButton(
-            onPressed: () => context.read<CounterCubit>().decrement(),
-            child: Icon(Icons.remove),
-          )
+            child: const Icon(Icons.remove),
+            onPressed: () => context.bloc<CounterCubit>().decrement(),
+          ),
         ],
       ),
     );

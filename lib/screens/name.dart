@@ -1,19 +1,13 @@
+import 'package:bytebank/components/container.dart';
+import 'package:bytebank/models/name.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class NameCubit extends Cubit<String> {
-  NameCubit(String name) : super('');
-
-  void change(String name) => emit(name);
-}
-
-class NameContainer extends StatelessWidget {
+class NameContainer extends BlocContainer {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => NameCubit('Josué'),
-      child: NameView(),
-    );
+    return NameView();
   }
 }
 
@@ -22,41 +16,38 @@ class NameView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // agora não tem problema essa abordagem
+    // pois não vamos fazer um rebuild quando o estado é alterado
     _nameController.text = context.read<NameCubit>().state;
-    BlocBuilder<NameCubit, String>(){
-
-    }
-
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Mudar Nome'),
-        ),
-        body: Column(
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                labelText: 'Nome Desejado',
-              ),
-              style: TextStyle(
-                fontSize: 24.0,
+      appBar: AppBar(title: const Text("Change name")),
+      body: Column(
+        children: [
+          TextField(
+            controller: _nameController,
+            decoration: InputDecoration(
+              labelText: "Desired name",
+            ),
+            style: TextStyle(
+              fontSize: 24.0,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: SizedBox(
+              width: double.maxFinite,
+              child: RaisedButton(
+                child: Text("Change"),
+                onPressed: () {
+                  final name = _nameController.text;
+                  context.bloc<NameCubit>().change(name);
+                  Navigator.pop(context);
+                },
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 16.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: RaisedButton(
-                  child: Text("Alterar"),
-                  onPressed: () {
-                    final name = _nameController.text;
-                    context.read<NameCubit>().change(name);
-                    Navigator.pop(context);
-                  },
-                ),
-              ),
-            )
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }
