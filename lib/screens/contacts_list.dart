@@ -58,16 +58,11 @@ class ContactsListContainer extends BlocContainer{
   }
 } 
 
-class ContactsList extends StatefulWidget {
+class ContactsList extends StatelessWidget {
   final ContactDao _dao;
 
   ContactsList(this._dao);
 
-  @override
-  _ContactsListState createState() => _ContactsListState();
-}
-
-class _ContactsListState extends State<ContactsList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
